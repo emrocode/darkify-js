@@ -1,6 +1,5 @@
 #!/bin/bash
-mkdir demo && touch index.html
-cat > ./demo/index.html << EOF
+mkdir demo && cat > ./demo/index.html << EOF
 <!DOCTYPE html>
 <html lang="en">
   <head>

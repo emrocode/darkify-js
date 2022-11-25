@@ -1,0 +1,45 @@
+{
+  "name": "darkify-js",
+  "version": "1.11.2022",
+  "description": "Create an easy dark mode for your site",
+  "type": "module",
+  "main": "dist/darkify.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/index.d.ts",
+    "dist/darkify.js",
+    "dist/darkify.min.js",
+    "dist/darkify.min.js.map"
+  ],
+  "scripts": {
+    "_cls": "rm -rf dist",
+    "_bundle": "rollup -c rollup.config.ts --configPlugin typescript",
+    "prettier": "prettier --write src/**/* test/**/*",
+    "build": "npm run _cls && npm run _bundle"
+  },
+  "keywords": [
+    "color-scheme",
+    "toggle",
+    "dark-mode",
+    "dark-theme"
+  ],
+  "author": "Emilio Romero <emrocode@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emrocode/darkify-js"
+  },
+  "homepage": "https://github.com/emrocode/darkify-js#readme",
+  "bugs": {
+    "url": "https://github.com/emrocode/darkify-js/issues"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.1.0",
+    "@rollup/plugin-typescript": "^9.0.2",
+    "prettier": "^2.8.0",
+    "rollup": "^3.4.0",
+    "rollup-plugin-dts": "^5.0.0",
+    "tslib": "^2.4.1",
+    "typescript": "^4.9.3"
+  }
+}

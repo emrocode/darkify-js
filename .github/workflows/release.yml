@@ -1,0 +1,26 @@
+on:
+  push:
+    tags:
+      - "v*"
+
+name: New release
+
+jobs:
+  build:
+    name: create release
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v2
+      - name: create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Initial release 🎉
+          draft: false
+          prerelease: false

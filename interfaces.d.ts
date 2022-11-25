@@ -1,5 +1,5 @@
 export interface options {
-  useLocalStorage: boolean;
-  useSessionStorage: boolean;
-  autoMatchTheme: boolean;
+  autoMatchTheme?: boolean;
+  useLocalStorage?: boolean;
+  useSessionStorage?: boolean;
 }

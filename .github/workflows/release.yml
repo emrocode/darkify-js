@@ -21,6 +21,8 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           body: |
-            Initial release 🎉
+            New release 🎉
+            - Minor changes
+            - Bug fixes
           draft: false
           prerelease: false

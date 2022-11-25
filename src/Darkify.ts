@@ -3,97 +3,94 @@ import { options } from '../interfaces';
 export const isBrowser = typeof window !== 'undefined';
 
 export default class Darkify {
+  options!: options;
+  theme!: { value: string };
   cssTag!: HTMLStyleElement;
+
+  private static readonly storageKey = 'darkify-theme';
+
   /**
-   *
-   * @param {string} element Button ID (recommended) or HTML element
+   * @param {string} element Button ID ( recommended ) or HTML element
    * @param {object} options Options
-   * @constructor
    */
   constructor(element: string, options: options) {
     if (!isBrowser) {
       return;
     }
 
-    const storageKey = 'darkify-theme';
-    const defaultTheme = 'light';
+    // avoid using both values
+    if (options.useLocalStorage && options.useSessionStorage) {
+      console.warn('Both storage options are enabled. Disabling useSessionStorage...');
+      options.useSessionStorage = false;
+    }
 
     const defaultOptions = {
+      autoMatchTheme: true,
       useLocalStorage: true,
       useSessionStorage: false,
-      autoMatchTheme: true,
     };
 
-    options = Object.assign({}, defaultOptions, options);
+    this.options = Object.assign({}, defaultOptions, options);
 
-    window.onload = () => {
-      this.createAttribute(theme, savePreference);
-
-      document.querySelector(element)?.addEventListener('click', () => {
-        return this.onClick(theme, savePreference);
-      });
-    };
+    document.addEventListener('DOMContentLoaded', () => {
+      this.createAttribute();
+      const htmlElement = document.querySelector(element);
+      htmlElement?.addEventListener('click', () => this.onClick());
+    });
 
     // sync with system changes
     window
       .matchMedia('(prefers-color-scheme: dark)')
       .addEventListener('change', ({ matches: isDark }) => {
-        theme.value = isDark ? 'dark' : 'light';
-        savePreference();
+        this.theme.value = isDark ? 'dark' : 'light';
+        this.savePreference();
         return window.location.reload();
       });
 
-    const theme = {
-      value: this.getOsPreference(options, storageKey) ?? defaultTheme,
+    this.theme = {
+      value: this.getOsPreference(options) ?? 'light',
     };
 
-    // save to local or session storage
-    const savePreference = () => {
-      if (options.useLocalStorage && options.useSessionStorage === false)
-        return window.localStorage.setItem(storageKey, theme.value);
-      else if (options.useSessionStorage)
-        return window.sessionStorage.setItem(storageKey, theme.value);
-    };
-
-    const cssTag = document.createElement('style');
-
-    this.cssTag = cssTag;
+    this.cssTag = document.createElement('style');
+    this.createAttribute();
   }
 
   // get os color preference
-  getOsPreference(options: options, storageKey: string) {
-    if (options.useLocalStorage && window.localStorage.getItem(storageKey))
-      return window.localStorage.getItem(storageKey);
-    else if (
-      options.useSessionStorage &&
-      window.sessionStorage.getItem(storageKey)
-    )
-      return window.sessionStorage.getItem(storageKey);
-    else
-      return options.autoMatchTheme &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches
+  getOsPreference(options: options) {
+    if (options.useLocalStorage && window.localStorage.getItem(Darkify.storageKey)) {
+      return window.localStorage.getItem(Darkify.storageKey);
+    } else if (options.useSessionStorage && window.sessionStorage.getItem(Darkify.storageKey)) {
+      return window.sessionStorage.getItem(Darkify.storageKey);
+    } else {
+      return options.autoMatchTheme && window.matchMedia('(prefers-color-scheme: dark)').matches
         ? 'dark'
         : 'light';
+    }
   }
 
-  createAttribute(theme: { value: string }, savePreference: () => void) {
-    let dataTheme = document.getElementsByTagName('html');
-    dataTheme[0].setAttribute('data-theme', `${theme.value}`);
+  createAttribute() {
+    let dataTheme = document.getElementsByTagName('html')[0];
+    dataTheme.setAttribute('data-theme', this.theme.value);
 
-    let css = `/**! Darkify [ Create an easy dark mode for your site ] **/:root:is([data-theme="${theme.value}"]){color-scheme: ${theme.value}}`;
+    let css = `/**! Darkify / Create an easy dark mode for your site **/:root:is([data-theme="${this.theme.value}"]){color-scheme: ${this.theme.value}}`;
 
-    this.updateStyles(css);
-    savePreference();
-  }
-
-  updateStyles = (css: string) => {
     this.cssTag.setAttribute('type', 'text/css');
     this.cssTag.innerHTML = css;
     document.head.appendChild(this.cssTag);
-  };
 
-  onClick(theme: { value: string }, savePreference: () => void) {
-    theme.value = theme.value === 'light' ? 'dark' : 'light';
-    this.createAttribute(theme, savePreference);
+    this.savePreference();
+  }
+
+  // save to local or session storage
+  savePreference() {
+    const STO = this.options.useLocalStorage ? window.localStorage : window.sessionStorage;
+    const OTS = this.options.useLocalStorage ? window.sessionStorage : window.localStorage;
+    OTS.removeItem(Darkify.storageKey);
+    STO.setItem(Darkify.storageKey, this.theme.value);
+  }
+
+  onClick() {
+    this.theme.value = this.theme.value === 'light' ? 'dark' : 'light';
+    this.createAttribute();
   }
 }

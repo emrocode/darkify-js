@@ -6,9 +6,8 @@ export default class Darkify {
   cssTag!: HTMLStyleElement;
   /**
    *
-   * @param {string} element Button ID (recommended) or HTML element
+   * @param {string} element Button ID ( recommended ) or HTML element
    * @param {object} options Options
-   * @constructor
    */
   constructor(element: string, options: options) {
     if (!isBrowser) {
@@ -49,10 +48,13 @@ export default class Darkify {
 
     // save to local or session storage
     const savePreference = () => {
-      if (options.useLocalStorage && options.useSessionStorage === false)
-        return window.localStorage.setItem(storageKey, theme.value);
-      else if (options.useSessionStorage)
-        return window.sessionStorage.setItem(storageKey, theme.value);
+      if (options.useLocalStorage && options.useSessionStorage === false) {
+        window.sessionStorage.removeItem(storageKey);
+        window.localStorage.setItem(storageKey, theme.value);
+      } else if (options.useSessionStorage) {
+        window.localStorage.removeItem(storageKey);
+        window.sessionStorage.setItem(storageKey, theme.value);
+      }
     };
 
     const cssTag = document.createElement('style');

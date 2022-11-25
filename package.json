@@ -1,6 +1,6 @@
 {
   "name": "darkify-js",
-  "version": "1.11.2022",
+  "version": "2.11.2022",
   "description": "Create an easy dark mode for your site",
   "type": "module",
   "main": "dist/darkify.js",
@@ -14,7 +14,7 @@
   "scripts": {
     "_cls": "rm -rf dist",
     "_bundle": "rollup -c rollup.config.ts --configPlugin typescript",
-    "prettier": "prettier --write src/**/* test/**/*",
+    "prettier": "prettier --write src/**/*",
     "build": "npm run _cls && npm run _bundle"
   },
   "keywords": [

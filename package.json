@@ -1,12 +1,12 @@
 {
   "name": "darkify-js",
-  "version": "2.11.2022",
+  "version": "3.11.2022",
   "description": "Create an easy dark mode for your site",
   "type": "module",
   "main": "dist/darkify.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/darkify.d.ts",
   "files": [
-    "dist/index.d.ts",
+    "dist/darkify.d.ts",
     "dist/darkify.js",
     "dist/darkify.min.js",
     "dist/darkify.min.js.map"

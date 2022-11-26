@@ -4,6 +4,8 @@ export const isBrowser = typeof window !== 'undefined';
 
 export default class Darkify {
   cssTag!: HTMLStyleElement;
+  savePreference!: () => void;
+  theme!: { value: string; };
   /**
    *
    * @param {string} element Button ID ( recommended ) or HTML element
@@ -26,10 +28,10 @@ export default class Darkify {
     options = Object.assign({}, defaultOptions, options);
 
     window.onload = () => {
-      this.createAttribute(theme, savePreference);
+      this.createAttribute();
 
       document.querySelector(element)?.addEventListener('click', () => {
-        return this.onClick(theme, savePreference);
+        return this.onClick();
       });
     };
 
@@ -60,6 +62,8 @@ export default class Darkify {
     const cssTag = document.createElement('style');
 
     this.cssTag = cssTag;
+    this.savePreference = savePreference;
+    this.theme = theme;
   }
 
   // get os color preference
@@ -78,14 +82,14 @@ export default class Darkify {
         : 'light';
   }
 
-  createAttribute(theme: { value: string }, savePreference: () => void) {
+  createAttribute() {
     let dataTheme = document.getElementsByTagName('html');
-    dataTheme[0].setAttribute('data-theme', `${theme.value}`);
+    dataTheme[0].setAttribute('data-theme', `${this.theme.value}`);
 
-    let css = `/**! Darkify [ Create an easy dark mode for your site ] **/:root:is([data-theme="${theme.value}"]){color-scheme: ${theme.value}}`;
+    let css = `/**! Darkify [ Create an easy dark mode for your site ] **/:root:is([data-theme="${this.theme.value}"]){color-scheme: ${this.theme.value}}`;
 
     this.updateStyles(css);
-    savePreference();
+    this.savePreference();
   }
 
   updateStyles = (css: string) => {
@@ -94,8 +98,8 @@ export default class Darkify {
     document.head.appendChild(this.cssTag);
   };
 
-  onClick(theme: { value: string }, savePreference: () => void) {
-    theme.value = theme.value === 'light' ? 'dark' : 'light';
-    this.createAttribute(theme, savePreference);
+  onClick() {
+    this.theme.value = this.theme.value === 'light' ? 'dark' : 'light';
+    this.createAttribute();
   }
 }

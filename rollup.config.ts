@@ -19,14 +19,13 @@ const config = [
         name: 'Darkify',
         format: 'umd',
         banner: BANNER,
-        sourcemap: false,
       },
       {
         file: 'dist/darkify.min.js',
         name: 'Darkify',
         format: 'iife',
         banner: BANNER,
-        sourcemap: true,
+        sourcemap: 'inline',
         plugins: [terser()],
       },
     ],
@@ -35,7 +34,7 @@ const config = [
   {
     input: './src/index.ts',
     output: {
-      file: 'dist/index.d.ts',
+      file: 'dist/darkify.d.ts',
       format: 'es',
     },
     plugins: [dts()],

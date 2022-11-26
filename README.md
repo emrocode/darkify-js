@@ -21,7 +21,7 @@ var darkMode = new Darkify('#element', options)
 ### CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/darkify-js@2.11.2022"></script>
+<script src="https://cdn.jsdelivr.net/npm/darkify-js@3.11.2022"></script>
 ```
 
 ## Compatibility

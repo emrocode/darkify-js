@@ -22,6 +22,6 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             New release 🎉
-            - Minor changes
+            - Updated interfaces
           draft: false
           prerelease: false

@@ -25,7 +25,6 @@ const config = [
         name: 'Darkify',
         format: 'iife',
         banner: BANNER,
-        sourcemap: 'inline',
         plugins: [terser()],
       },
     ],

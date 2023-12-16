@@ -6,6 +6,7 @@ export default class Darkify {
   options!: options;
   theme!: { value: string };
   cssTag!: HTMLStyleElement;
+  metaTag!: HTMLMetaElement;
 
   private static readonly storageKey = 'darkify-theme';
 
@@ -22,12 +23,18 @@ export default class Darkify {
     if (options.useLocalStorage && options.useSessionStorage) {
       console.warn('Both storage options are enabled. Disabling useSessionStorage...');
       options.useSessionStorage = false;
+    } else if (!options.useLocalStorage && !options.useSessionStorage) {
+      console.warn('Both storage options are disabled. Enabling useLocalStorage...');
+      options.useLocalStorage = true;
+    } else if (options.useSessionStorage) {
+      options.useLocalStorage = false;
     }
 
     const defaultOptions = {
       autoMatchTheme: true,
       useLocalStorage: true,
       useSessionStorage: false,
+      useColors: ['#ffffff', '#000000'],
     };
 
     this.options = Object.assign({}, defaultOptions, options);
@@ -52,6 +59,7 @@ export default class Darkify {
     };
 
     this.cssTag = document.createElement('style');
+    this.metaTag = document.createElement('meta');
     this.createAttribute();
   }
 
@@ -70,13 +78,23 @@ export default class Darkify {
 
   createAttribute() {
     let dataTheme = document.getElementsByTagName('html')[0];
-    dataTheme.setAttribute('data-theme', this.theme.value);
+    let css = `/**! Darkify / Easy dark mode for your site **/:root:is([data-theme="${this.theme.value}"]), [data-theme="${this.theme.value}"] {color-scheme: ${this.theme.value}}`;
+    let head = document.head;
 
-    let css = `/**! Darkify / Create an easy dark mode for your site **/:root:is([data-theme="${this.theme.value}"]){color-scheme: ${this.theme.value}}`;
+    // set theme-color meta tag
+    this.metaTag.setAttribute('name', 'theme-color');
+    this.metaTag.setAttribute(
+      'content',
+      this.theme.value === 'light' ? this.options.useColors[0] : this.options.useColors[1]
+    );
 
     this.cssTag.setAttribute('type', 'text/css');
     this.cssTag.innerHTML = css;
-    document.head.appendChild(this.cssTag);
+
+    dataTheme.setAttribute('data-theme', this.theme.value);
+
+    head.appendChild(this.metaTag);
+    head.appendChild(this.cssTag);
 
     this.savePreference();
   }

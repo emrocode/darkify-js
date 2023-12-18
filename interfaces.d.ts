@@ -1,6 +1,6 @@
-export interface options {
+export interface Options {
   autoMatchTheme?: boolean;
   useLocalStorage?: boolean;
   useSessionStorage?: boolean;
-  useColors: string;
+  useColorScheme: string[];
 }

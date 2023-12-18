@@ -21,8 +21,9 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           body: |
-            New release 🎉
-            - Minor changes
-            - Bug fixes
+            New release :tada:
+            - Code optimization
+            - Added use color scheme option (useColorScheme)
+            - Bug fixes :bug:
           draft: false
           prerelease: false

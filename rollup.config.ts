@@ -1,6 +1,7 @@
 import typescript from '@rollup/plugin-typescript';
 import terser from '@rollup/plugin-terser';
 import dts from 'rollup-plugin-dts';
+import cleanup from 'rollup-plugin-cleanup';
 import pkg from './package.json' assert { type: 'json' };
 
 const BANNER = `/**
@@ -28,7 +29,7 @@ const config = [
         plugins: [terser()],
       },
     ],
-    plugins: [typescript()],
+    plugins: [typescript(), cleanup({ comments: 'none', extensions: ['ts'] })],
   },
   {
     input: './src/index.ts',

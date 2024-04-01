@@ -15,6 +15,7 @@ const options = {
 // autoMatchTheme: default is true
 // useLocalStorage: default is true
 // useSessionStorage: default is false
+// useColorScheme: default is ['#ffffff', '#000000']
 
 var darkMode = new Darkify('#element', options)
 ```

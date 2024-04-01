@@ -1,6 +1,6 @@
 #!/bin/bash
 mkdir demo && cat > ./demo/index.html << EOF
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -9,12 +9,99 @@ mkdir demo && cat > ./demo/index.html << EOF
     <script type="text/javascript" src="../dist/darkify.min.js"></script>
     <title>Darkify &#x2014; Demo</title>
   </head>
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --pmcolor: #f1f0f9;
+      --sdcolor: #fefefe;
+      --ttcolor: #2e2e2e;
+      --qncolor: #f5f5f5;
+      --border-sm: 0.25rem;
+    }
+
+    :root:is([data-theme='dark']) {
+      --pmcolor: #2e2e2e;
+      --sdcolor: #3b3b3b;
+      --ttcolor: #e2e2e2;
+      --qncolor: #484848;
+    }
+
+    html,
+    body {
+      font-family: system-ui, sans-serif;
+      font-size: 100%;
+      line-height: 1.5;
+      color: var(--ttcolor);
+      background-color: var(--pmcolor);
+    }
+
+    main {
+      width: 90%;
+      height: 100vh;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    button {
+      font-family: inherit;
+      font-size: inherit;
+      cursor: pointer;
+      border: none;
+      background-color: transparent;
+    }
+
+    .card {
+      max-width: 250px;
+      display: flex;
+      flex-direction: column;
+      row-gap: 1.25rem;
+      cursor: default;
+      padding: 1.25rem;
+      border-radius: var(--border-sm);
+      background-color: var(--sdcolor);
+      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    }
+
+    .card-button {
+      padding: 0.75rem;
+      border-radius: var(--border-sm);
+      color: var(--ttcolor);
+      background-color: var(--qncolor);
+    }
+
+    [data-theme='light'] .card-button::before {
+      content: '\0028🌞\0029';
+      margin-right: 0.5rem;
+    }
+
+    [data-theme='dark'] .card-button::before {
+      content: '\0028🌚\0029';
+      margin-right: 0.5rem;
+    }
+  </style>
   <body>
     <div id="root">
-      <button type="button" id="element">Button</button>
+      <main>
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">Darkify JS</h2>
+            <p class="card-text">Create an easy dark mode for your site</p>
+          </div>
+          <button type="button" id="element" class="card-button">Toggle theme</button>
+        </div>
+      </main>
     </div>
     <script type="text/javascript">
-      new Darkify("#element", { useSessionStorage: true });
+      new Darkify('#element', { useSessionStorage: true });
     </script>
   </body>
 </html>

@@ -79,7 +79,7 @@ export default class Darkify {
   createAttribute() {
     const dataTheme = document.getElementsByTagName('html')[0];
     const { useColorScheme } = this.options;
-    let css = `/**! Darkify / Easy dark mode for your site **/:root:is([data-theme="${this.theme.value}"]), [data-theme="${this.theme.value}"] {color-scheme: ${this.theme.value}}`;
+    let css = `/**! Darkify / A simple dark mode toggle library **/:root:is([data-theme="${this.theme.value}"]), [data-theme="${this.theme.value}"] {color-scheme: ${this.theme.value}}`;
 
     dataTheme.setAttribute('data-theme', this.theme.value);
 

@@ -22,8 +22,6 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             New release :tada:
-            - Code optimization
-            - Bug fixes :bug:
-              - Fixed: Darkify can now be used without providing specific options, using the default values.
+            - Add additional outputs for improved compatibility
           draft: false
           prerelease: false

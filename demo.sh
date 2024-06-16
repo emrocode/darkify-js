@@ -25,7 +25,8 @@ mkdir demo && cat > ./demo/index.html << EOF
       </main>
     </div>
     <script type="text/javascript">
-      new Darkify('#element', { useSessionStorage: true });
+      var dMode = new Darkify('#element');
+      console.info(dMode);
     </script>
   </body>
 </html>

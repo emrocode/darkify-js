@@ -1,6 +1,5 @@
+import { isBrowser } from './isBrowser';
 import type { Options } from '../types';
-
-export const isBrowser = typeof window !== 'undefined';
 
 export default class Darkify {
   private static readonly storageKey = 'darkify-theme';
@@ -12,6 +11,7 @@ export default class Darkify {
   /**
    * @param {string} element Button ID ( recommended ) or HTML element
    * @param {object} options Options
+   * @see {@link https://github.com/emrocode/darkify-js/wiki|Documentation}
    */
   constructor(element: string, options: Options) {
     if (!isBrowser) {
@@ -19,11 +19,8 @@ export default class Darkify {
     }
 
     // avoid using both values
-    if (options?.useLocalStorage) {
-      options.useSessionStorage = false;
-    } else if (options?.useSessionStorage) {
-      options.useLocalStorage = false;
-    }
+    options?.useLocalStorage && (options.useSessionStorage = false);
+    options?.useSessionStorage && (options.useLocalStorage = false);
 
     // set default options
     const defaultOptions: Options = {
@@ -39,7 +36,7 @@ export default class Darkify {
 
     document.addEventListener('DOMContentLoaded', () => {
       this.createAttribute();
-      const htmlElement = document.querySelector(element);
+      const htmlElement = document.querySelector<HTMLElement>(element);
       htmlElement?.addEventListener('click', () => this.onClick());
     });
 
@@ -49,7 +46,6 @@ export default class Darkify {
       .addEventListener('change', ({ matches: isDark }) => {
         this.theme.value = isDark ? 'dark' : 'light';
         this.savePreference();
-        return window.location.reload();
       });
 
     this.theme = {
@@ -88,7 +84,7 @@ export default class Darkify {
   }
 
   updateTags(css: string, useColorScheme: string[]) {
-    const head = document.head;
+    const head = document.head || document.getElementsByTagName('head')[0];
 
     // update theme-color meta tag
     this.metaTag.setAttribute('name', 'theme-color');

@@ -1,29 +1,33 @@
-# Darkify js
-Create an easy dark mode for your site
-## 📦 Installation
+# Darkify JS
+A simple dark mode toggle library
+
+### 📦 Installation
+Use npm or any other package manager:
+
 ```bash
 npm install darkify-js
 ```
-## ⚙️ Setup
+
+### ⚙️ Setup
+
 ```js
-import Darkify from 'darkify-js'
+// main.js
+import Darkify from "darkify-js";
 
 const options = {
   autoMatchTheme: true,
-}
+};
 
 // autoMatchTheme: default is true
 // useLocalStorage: default is true
 // useSessionStorage: default is false
-// useColorScheme: default is ['#ffffff', '#000000']
+// useColorScheme: default is ["#ffffff", "#000000"]
 
-var darkMode = new Darkify('#element', options)
+new Darkify("#element", options);
 ```
+
 ### CDN
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/darkify-js"></script>
 ```
-
-## Compatibility
-[Check browser compatibility](https://caniuse.com/mdn-css_properties_color-scheme)

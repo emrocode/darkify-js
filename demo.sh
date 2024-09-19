@@ -10,7 +10,7 @@ mkdir demo && cat > ./demo/index.html << EOF
     <title>Darkify &#x2014; Demo</title>
   </head>
   <style>
-    .card,main{display:flex}*,::after,::before{margin:0;padding:0;box-sizing:border-box}:root{--pmcolor:#f1f0f9;--sdcolor:#fefefe;--ttcolor:#2e2e2e;--qncolor:#f5f5f5;--border-sm:0.25rem}:root:is([data-theme=dark]){--pmcolor:#2e2e2e;--sdcolor:#3b3b3b;--ttcolor:#e2e2e2;--qncolor:#484848}body,html{font-family:system-ui,sans-serif;font-size:100%;line-height:1.5;color:var(--ttcolor);background-color:var(--pmcolor)}main{width:90%;height:100vh;margin:0 auto;align-items:center;justify-content:center}button{font-family:inherit;font-size:inherit;cursor:pointer;border:none;background-color:transparent}.card,.card-button{border-radius:var(--border-sm)}.card{max-width:250px;flex-direction:column;row-gap:1.25rem;cursor:default;padding:1.25rem;background-color:var(--sdcolor);box-shadow:0 1px 2px 0 rgb(0 0 0 / .05)}.card-button{padding:.75rem;color:var(--ttcolor);background-color:var(--qncolor)}[data-theme=light] .card-button::before{content:'\0028🌞\0029';margin-right:.5rem}[data-theme=dark] .card-button::before{content:'\0028🌚\0029';margin-right:.5rem}
+    .card,main{display:flex}*,::after,::before{margin:0;padding:0;box-sizing:border-box}:root{--pmcolor:#f1f0f9;--sdcolor:#fefefe;--ttcolor:#2e2e2e;--qncolor:#f5f5f5;--border-sm:0.25rem}:root:is([data-theme=dark]){--pmcolor:#2e2e2e;--sdcolor:#3b3b3b;--ttcolor:#e2e2e2;--qncolor:#484848}body,html{font-family:system-ui,sans-serif;font-size:100%;line-height:1.5;color:var(--ttcolor);background-color:var(--pmcolor)}main{width:90%;height:100vh;margin:0 auto;align-items:center;justify-content:center}button{font-family:inherit;font-size:inherit;cursor:pointer;border:none;background-color:transparent}.card,.card-button{border-radius:var(--border-sm)}.card{max-width:250px;flex-direction:column;row-gap:1.25rem;cursor:default;padding:1.25rem;text-align:center;background-color:var(--sdcolor);box-shadow:0 1px 2px 0 rgb(0 0 0 / .05)}.card-button{padding:.75rem;color:var(--ttcolor);background-color:var(--qncolor)}[data-theme=light] .card-button::before{content:'\0028🌞\0029';margin-right:.5rem}[data-theme=dark] .card-button::before{content:'\0028🌚\0029';margin-right:.5rem}
   </style>
   <body>
     <div id="root">
@@ -18,7 +18,7 @@ mkdir demo && cat > ./demo/index.html << EOF
         <div class="card">
           <div class="card-body">
             <h2 class="card-title">Darkify JS</h2>
-            <p class="card-text">Create an easy dark mode for your site</p>
+            <em class="card-text">Create an easy dark mode for your site</em>
           </div>
           <button type="button" id="element" class="card-button">Toggle theme</button>
         </div>
@@ -26,7 +26,7 @@ mkdir demo && cat > ./demo/index.html << EOF
     </div>
     <script type="text/javascript">
       var dMode = new Darkify('#element');
-      console.info(dMode);
+      console.table(dMode.options);
     </script>
   </body>
 </html>

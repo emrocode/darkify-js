@@ -1,7 +1,12 @@
 # Darkify JS
-A simple dark mode toggle library
+
+🌚 A simple dark mode toggle library that makes it easy to implement dark mode on your website without additional configuration
+
+> [!NOTE]
+> Please make sure to read the [Wiki] for detailed documentation and examples
 
 ### 📦 Installation
+
 Use npm or any other package manager:
 
 ```bash
@@ -12,7 +17,7 @@ npm install darkify-js
 
 ```js
 // main.js
-import Darkify from "darkify-js";
+import Darkify from 'darkify-js';
 
 const options = {
   autoMatchTheme: true,
@@ -21,13 +26,9 @@ const options = {
 // autoMatchTheme: default is true
 // useLocalStorage: default is true
 // useSessionStorage: default is false
-// useColorScheme: default is ["#ffffff", "#000000"]
+// useColorScheme: default is ['#ffffff', '#000000']
 
-new Darkify("#element", options);
+new Darkify('#element', options);
 ```
 
-### CDN
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/darkify-js"></script>
-```
+[Wiki]: https://github.com/emrocode/darkify-js/wiki

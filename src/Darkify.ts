@@ -2,11 +2,11 @@ import { isBrowser } from './isBrowser';
 import type { Options } from '../types';
 
 export default class Darkify {
-  private static readonly storageKey = 'darkify-theme';
-  private options = {} as Options;
-  private theme!: { value: string };
-  private cssTag!: HTMLStyleElement;
-  private metaTag!: HTMLMetaElement;
+  private static readonly storageKey = 'theme';
+  options = {} as Options;
+  theme!: { value: string };
+  cssTag!: HTMLStyleElement;
+  metaTag!: HTMLMetaElement;
 
   /**
    * @param {string} element Button ID ( recommended ) or HTML element

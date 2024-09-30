@@ -1,2 +1,2 @@
-import Darkify from './Darkify';
+import { Darkify } from './Darkify';
 export default Darkify;

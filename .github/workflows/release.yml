@@ -22,6 +22,7 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             New release :tada:
-            - Add additional outputs for improved compatibility
+            - Code optimization
+            - The storage key `darkify-theme` is now `theme`
           draft: false
           prerelease: false

@@ -1,9 +1,10 @@
 import { isBrowser } from './isBrowser';
-import type { Options } from '../types';
+import { defaultOptions } from './defaultOptions';
+import { type Options } from '../types';
 
-export default class Darkify {
+export class Darkify {
   private static readonly storageKey = 'theme';
-  options = {} as Options;
+  options: Options = {};
   theme!: { value: string };
   cssTag!: HTMLStyleElement;
   metaTag!: HTMLMetaElement;
@@ -21,14 +22,6 @@ export default class Darkify {
     // avoid using both values
     options?.useLocalStorage && (options.useSessionStorage = false);
     options?.useSessionStorage && (options.useLocalStorage = false);
-
-    // set default options
-    const defaultOptions: Options = {
-      autoMatchTheme: true,
-      useLocalStorage: true,
-      useSessionStorage: false,
-      useColorScheme: ['#ffffff', '#000000'],
-    };
 
     // merge defaults with user options
     options = { ...defaultOptions, ...options };

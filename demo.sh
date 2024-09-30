@@ -26,7 +26,7 @@ mkdir demo && cat > ./demo/index.html << EOF
     </div>
     <script type="text/javascript">
       var dMode = new Darkify('#element');
-      console.table(dMode.options);
+      console.info(dMode);
     </script>
   </body>
 </html>

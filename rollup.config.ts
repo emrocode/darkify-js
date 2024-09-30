@@ -33,6 +33,7 @@ const config = [
         name: 'Darkify',
         format: 'umd',
         banner: BANNER,
+        plugins: [terser()],
       },
       {
         file: 'dist/darkify.min.js',

@@ -2,7 +2,6 @@
 
 🌚 A simple dark mode toggle library that makes it easy to implement dark mode on your website without additional configuration
 
-> [!NOTE]
 > Please make sure to read the [Wiki] for detailed documentation and examples
 
 ### 📦 Installation

@@ -1,4 +1,5 @@
 # Darkify JS
+[![Run tests](https://github.com/emrocode/darkify-js/actions/workflows/tests.yml/badge.svg)](https://github.com/emrocode/darkify-js/actions/workflows/tests.yml)
 
 🌚 A simple dark mode toggle library that makes it easy to implement dark mode on your website without additional configuration
 

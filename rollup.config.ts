@@ -18,9 +18,7 @@ const config = [
     output: [
       {
         file: 'dist/darkify.cjs.js',
-        name: 'Darkify',
         format: 'cjs',
-        exports: 'named',
         banner: BANNER,
       },
       {
@@ -45,11 +43,11 @@ const config = [
     ],
     plugins: [
       typescript(),
+      commonjs(),
       cleanup({
         comments: 'none',
-        extensions: ['ts'],
+        extensions: ['ts', 'js'],
       }),
-      commonjs(),
     ],
   },
   {

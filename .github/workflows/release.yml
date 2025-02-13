@@ -9,9 +9,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
-      - name: create release
+      - name: Create release
         id: create_release
         uses: actions/create-release@v1
         env:

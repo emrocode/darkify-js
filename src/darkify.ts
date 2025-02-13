@@ -27,12 +27,6 @@ export class Darkify {
     options = { ...defaultOptions, ...options };
     this.options = options;
 
-    document.addEventListener('DOMContentLoaded', () => {
-      this.#createAttribute();
-      const htmlElement = document.querySelector<HTMLElement>(element);
-      htmlElement?.addEventListener('click', () => this.toggleTheme());
-    });
-
     // sync with system changes
     window
       .matchMedia('(prefers-color-scheme: dark)')
@@ -41,13 +35,19 @@ export class Darkify {
         this.#savePreference();
       });
 
-    this.#theme = {
-      value: this.#getOsPreference(options),
-    };
-
+    this.#init(element);
+    this.#theme = { value: this.#getOsPreference(options) };
     this.#cssTag = document.createElement('style');
     this.#metaTag = document.createElement('meta');
     this.#createAttribute();
+  }
+
+  #init(element: string) {
+    document.addEventListener('DOMContentLoaded', () => {
+      this.#createAttribute();
+      const htmlElement = document.querySelector<HTMLElement>(element);
+      htmlElement?.addEventListener('click', () => this.toggleTheme());
+    });
   }
 
   // get os color preference

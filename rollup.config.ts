@@ -1,6 +1,5 @@
 import typescript from '@rollup/plugin-typescript';
 import terser from '@rollup/plugin-terser';
-import commonjs from '@rollup/plugin-commonjs';
 import dts from 'rollup-plugin-dts';
 import cleanup from 'rollup-plugin-cleanup';
 import pkg from './package.json' assert { type: 'json' };
@@ -43,7 +42,6 @@ const config = [
     ],
     plugins: [
       typescript(),
-      commonjs(),
       cleanup({
         comments: 'none',
         extensions: ['ts', 'js'],

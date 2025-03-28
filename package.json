@@ -37,7 +37,6 @@
   "author": "Emilio Romero <emrocode@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.2",
     "@types/jest": "^29.5.14",

@@ -20,8 +20,21 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           body: |
-            New release :tada:
-            - Code optimization
-            - The storage key `darkify-theme` is now `theme`
+            New Release :tada:
+            - Converted several functions to private class fields for encapsulation.
+            - Added new methods to handle theme synchronization and retrieve current theme.
+            - Renamed `onClick()` to `toggleTheme()` for better clarity
+
+            Changes:
+            - Converted functions to private class fields:
+              - `getOsPreference()` → `#getOsPreference()`
+              - `createAttribute()` → `#createAttribute()`
+              - `updateTags()` → `#updateTags()`
+              - `savePreference()` → `#savePreference()`
+            - New methods added:
+              - `getCurrentTheme()` - Fetches the current theme preference.
+              - `syncThemeBetweenTabs()` - Synchronizes the theme preference across all open tabs.
+            - Method renaming:
+              - `onClick()` → `toggleTheme()`
           draft: false
           prerelease: false

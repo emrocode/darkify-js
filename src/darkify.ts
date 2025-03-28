@@ -15,9 +15,7 @@ export class Darkify {
    * @see {@link https://github.com/emrocode/darkify-js/wiki|Documentation}
    */
   constructor(element: string, options: Options) {
-    if (!isBrowser) {
-      return;
-    }
+    if (!isBrowser) return;
 
     // avoid using both values
     options?.useLocalStorage && (options.useSessionStorage = false);
@@ -27,7 +25,15 @@ export class Darkify {
     options = { ...defaultOptions, ...options };
     this.options = options;
 
-    // sync with system changes
+    this.#init(element);
+    this.#theme = { value: this.#getOsPreference(options) };
+    this.#cssTag = document.createElement('style');
+    this.#metaTag = document.createElement('meta');
+    this.#createAttribute();
+    this.#syncThemeBetweenTabs();
+  }
+
+  #init(element: string) {
     window
       .matchMedia('(prefers-color-scheme: dark)')
       .addEventListener('change', ({ matches: isDark }) => {
@@ -35,14 +41,6 @@ export class Darkify {
         this.#savePreference();
       });
 
-    this.#init(element);
-    this.#theme = { value: this.#getOsPreference(options) };
-    this.#cssTag = document.createElement('style');
-    this.#metaTag = document.createElement('meta');
-    this.#createAttribute();
-  }
-
-  #init(element: string) {
     document.addEventListener('DOMContentLoaded', () => {
       this.#createAttribute();
       const htmlElement = document.querySelector<HTMLElement>(element);
@@ -68,7 +66,7 @@ export class Darkify {
   #createAttribute() {
     const dataTheme = document.getElementsByTagName('html')[0];
     const { useColorScheme } = this.options;
-    let css = `/**! Darkify / A simple dark mode toggle library **/:root:is([data-theme="${this.#theme.value}"]), [data-theme="${this.#theme.value}"] {color-scheme: ${this.#theme.value}}`;
+    let css = `/**! Darkify / A simple dark mode toggle library **/\n:root:is([data-theme="${this.#theme.value}"]),[data-theme="${this.#theme.value}"]{color-scheme:${this.#theme.value}}`;
 
     dataTheme.setAttribute('data-theme', this.#theme.value);
 
@@ -102,6 +100,15 @@ export class Darkify {
 
     OTS.removeItem(Darkify.storageKey);
     STO.setItem(Darkify.storageKey, this.#theme.value);
+  }
+
+  #syncThemeBetweenTabs() {
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'theme' && e.newValue) {
+        this.#theme.value = e.newValue;
+        this.#createAttribute();
+      }
+    });
   }
 
   /**

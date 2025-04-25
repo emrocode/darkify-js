@@ -103,8 +103,8 @@ export class Darkify {
   }
 
   #syncThemeBetweenTabs() {
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'theme' && e.newValue) {
+    window.addEventListener('storage', e => {
+      if (e.key === Darkify.storageKey && e.newValue) {
         this.#theme.value = e.newValue;
         this.#createAttribute();
       }

@@ -5,9 +5,9 @@ import { type Options } from '../types';
 export class Darkify {
   private static readonly storageKey = 'theme';
   readonly options: Options = {};
-  theme!: { value: string };
-  _cssTag!: HTMLStyleElement;
-  _metaTag!: HTMLMetaElement;
+  theme: string = 'light';
+  _style!: HTMLStyleElement;
+  _meta!: HTMLMetaElement;
 
   /**
    * @param {string} element Button ID ( recommended ) or HTML element
@@ -26,9 +26,9 @@ export class Darkify {
     this.options = options;
 
     this.init(element);
-    this.theme = { value: this.getOsPreference(options) };
-    this._cssTag = document.createElement('style');
-    this._metaTag = document.createElement('meta');
+    this.theme = this.getOsPreference(options);
+    this._style = document.createElement('style');
+    this._meta = document.createElement('meta');
     this.createAttribute();
     this.syncThemeBetweenTabs();
   }
@@ -37,40 +37,37 @@ export class Darkify {
     window
       .matchMedia('(prefers-color-scheme: dark)')
       .addEventListener('change', ({ matches: isDark }) => {
-        this.theme.value = isDark ? 'dark' : 'light';
+        this.theme = isDark ? 'dark' : 'light';
         this.savePreference();
       });
 
     document.addEventListener('DOMContentLoaded', () => {
-      this.createAttribute();
       const htmlElement = document.querySelector<HTMLElement>(element);
       htmlElement?.addEventListener('click', () => this.toggleTheme());
     });
   }
 
   // get os color preference
-  getOsPreference(options: Options): string | 'light' {
+  getOsPreference(options: Options): string {
     const { autoMatchTheme, useLocalStorage, useSessionStorage } = options;
     const STO =
       (useLocalStorage && window.localStorage.getItem(Darkify.storageKey)) ||
-      (useSessionStorage && window.sessionStorage.getItem(Darkify.storageKey));
-
-    return (
-      STO ||
+      (useSessionStorage && window.sessionStorage.getItem(Darkify.storageKey)) ||
       (autoMatchTheme && window.matchMedia('(prefers-color-scheme: dark)').matches
         ? 'dark'
-        : 'light')
-    );
+        : 'light');
+
+    return STO;
   }
 
   createAttribute() {
     const dataTheme = document.getElementsByTagName('html')[0];
     const { useColorScheme } = this.options;
-    let css = `/**! Darkify / A simple dark mode toggle library **/\n:root:is([data-theme="${this.theme.value}"]),[data-theme="${this.theme.value}"]{color-scheme:${this.theme.value}}`;
+    let css = `/**! Darkify / A simple dark mode toggle library **/\n:root:is([data-theme="${this.theme}"]),[data-theme="${this.theme}"]{color-scheme:${this.theme}}`;
 
-    dataTheme.setAttribute('data-theme', this.theme.value);
+    dataTheme.setAttribute('data-theme', this.theme);
 
-    this.updateTags(css, useColorScheme || []);
+    this.updateTags(css, useColorScheme ?? []);
     this.savePreference();
   }
 
@@ -78,18 +75,18 @@ export class Darkify {
     const head = document.head || document.getElementsByTagName('head')[0];
 
     // update theme-color meta tag
-    this._metaTag.setAttribute('name', 'theme-color');
-    this._metaTag.setAttribute(
+    this._meta.setAttribute('name', 'theme-color');
+    this._meta.setAttribute(
       'content',
-      this.theme.value === 'light' ? useColorScheme[0] : useColorScheme[1]
+      this.theme === 'light' ? useColorScheme[0] : useColorScheme[1]
     );
 
     // update style tag
-    this._cssTag.setAttribute('type', 'text/css');
-    this._cssTag.innerHTML = css;
+    this._style.setAttribute('type', 'text/css');
+    this._style.innerHTML = css;
 
-    head.appendChild(this._metaTag);
-    head.appendChild(this._cssTag);
+    head.appendChild(this._meta);
+    head.appendChild(this._style);
   }
 
   // save to local or session storage
@@ -99,13 +96,13 @@ export class Darkify {
     const OTS = useLocalStorage ? window.sessionStorage : window.localStorage;
 
     OTS.removeItem(Darkify.storageKey);
-    STO.setItem(Darkify.storageKey, this.theme.value);
+    STO.setItem(Darkify.storageKey, this.theme);
   }
 
   syncThemeBetweenTabs() {
     window.addEventListener('storage', e => {
       if (e.key === Darkify.storageKey && e.newValue) {
-        this.theme.value = e.newValue;
+        this.theme = e.newValue;
         this.createAttribute();
       }
     });
@@ -116,7 +113,7 @@ export class Darkify {
    * @returns {void}
    */
   toggleTheme(): void {
-    this.theme.value = this.theme.value === 'light' ? 'dark' : 'light';
+    this.theme = this.theme === 'light' ? 'dark' : 'light';
     this.createAttribute();
   }
 
@@ -125,6 +122,6 @@ export class Darkify {
    * @returns {string}
    */
   getCurrentTheme(): string {
-    return this.theme.value;
+    return this.theme;
   }
 }

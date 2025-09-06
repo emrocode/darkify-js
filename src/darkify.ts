@@ -2,7 +2,7 @@ import { isBrowser } from './isBrowser';
 import { defaultOptions } from './defaultOptions';
 import { type Options } from '../types';
 
-export class Darkify {
+export default class Darkify {
   private static readonly storageKey = 'theme';
   readonly options: Options = {};
   theme: string = 'light';

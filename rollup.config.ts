@@ -1,5 +1,6 @@
 import typescript from '@rollup/plugin-typescript';
 import terser from '@rollup/plugin-terser';
+import commonjs from '@rollup/plugin-commonjs';
 import dts from 'rollup-plugin-dts';
 import cleanup from 'rollup-plugin-cleanup';
 import pkg from './package.json' with { type: 'json' };
@@ -21,6 +22,13 @@ const config = [
         banner: BANNER,
       },
       {
+        file: 'dist/darkify.cjs.js',
+        name: 'Darkify',
+        format: 'cjs',
+        exports: 'named',
+        banner: BANNER,
+      },
+      {
         file: 'dist/darkify.umd.js',
         name: 'Darkify',
         format: 'umd',
@@ -37,6 +45,7 @@ const config = [
     ],
     plugins: [
       typescript(),
+      commonjs(),
       cleanup({
         comments: 'none',
         extensions: ['ts', 'js'],

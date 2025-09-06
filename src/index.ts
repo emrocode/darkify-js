@@ -1,1 +1,1 @@
-export { Darkify as default } from './darkify';
+export { default } from './darkify';

@@ -21,6 +21,6 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             New Release :tada:
-            - Code optimization
+            - Re-add `*.cjs.js` output file
           draft: false
           prerelease: false

@@ -1,4 +1,4 @@
-import Darkify from './darkify';
+import { Darkify } from './darkify';
 import { jest } from '@jest/globals';
 
 describe('Darkify', () => {

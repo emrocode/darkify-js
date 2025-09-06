@@ -23,9 +23,7 @@ const config = [
       },
       {
         file: 'dist/darkify.cjs.js',
-        name: 'Darkify',
         format: 'cjs',
-        exports: 'named',
         banner: BANNER,
       },
       {

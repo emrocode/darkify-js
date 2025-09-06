@@ -16,11 +16,6 @@ const config = [
     input: './src/index.ts',
     output: [
       {
-        file: 'dist/darkify.cjs.js',
-        format: 'cjs',
-        banner: BANNER,
-      },
-      {
         file: 'dist/darkify.esm.js',
         format: 'esm',
         banner: BANNER,

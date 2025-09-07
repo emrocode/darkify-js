@@ -1,6 +1,6 @@
 {
   "name": "darkify-js",
-  "version": "1.1.10",
+  "version": "1.1.11",
   "description": "A simple dark mode toggle library",
   "type": "module",
   "main": "dist/darkify.umd.js",

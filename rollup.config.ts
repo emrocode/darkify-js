@@ -27,20 +27,10 @@ const config = [
         banner: BANNER,
         plugins: [terser()],
       },
-      {
-        file: 'dist/darkify.min.js',
-        name: 'Darkify',
-        format: 'iife',
-        banner: BANNER,
-        plugins: [terser()],
-      },
     ],
     plugins: [
-      typescript(),
-      cleanup({
-        comments: 'none',
-        extensions: ['ts', 'js'],
-      }),
+      typescript({ tsconfig: './tsconfig.json' }),
+      cleanup({ comments: 'none', extensions: ['ts'] }),
     ],
   },
   {

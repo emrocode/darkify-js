@@ -6,7 +6,7 @@ mkdir demo && cat > ./demo/index.html << EOF
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="text/javascript" src="../dist/darkify.min.js"></script>
+    <script type="text/javascript" src="../dist/darkify.umd.js"></script>
     <title>Darkify &#x2014; Demo</title>
   </head>
   <style>

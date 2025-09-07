@@ -5,13 +5,11 @@
   "type": "module",
   "main": "dist/darkify.umd.js",
   "module": "dist/darkify.esm.js",
-  "browser": "dist/darkify.min.js",
   "types": "dist/darkify.d.ts",
   "files": [
     "dist/darkify.d.ts",
-    "dist/darkify.esm.js",
     "dist/darkify.umd.js",
-    "dist/darkify.min.js"
+    "dist/darkify.esm.js"
   ],
   "scripts": {
     "_cls": "rm -rf dist",

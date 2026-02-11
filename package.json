@@ -7,9 +7,7 @@
   "module": "dist/darkify.esm.js",
   "types": "dist/darkify.d.ts",
   "files": [
-    "dist/darkify.d.ts",
-    "dist/darkify.umd.js",
-    "dist/darkify.esm.js"
+    "dist"
   ],
   "scripts": {
     "_cls": "rm -rf dist",

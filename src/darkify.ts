@@ -1,10 +1,10 @@
 import { isBrowser } from './isBrowser';
 import { defaultOptions } from './defaultOptions';
-import { type Options } from '../types';
+import type { Options } from '../types';
 
 export class Darkify {
-  private static readonly storageKey = 'theme';
-  readonly options: Options = {};
+  private static readonly storageKey: string = 'theme';
+  readonly options: Options = defaultOptions;
   theme: string = 'light';
   _style!: HTMLStyleElement;
   _meta!: HTMLMetaElement;
@@ -14,41 +14,52 @@ export class Darkify {
    * @param {object} options Options
    * @see {@link https://github.com/emrocode/darkify-js/wiki|Documentation}
    */
-  constructor(element: string, options: Options) {
+  constructor(element: string, options: Partial<Options>) {
     if (!isBrowser) return;
 
-    // avoid using both values
-    options?.useLocalStorage && (options.useSessionStorage = false);
-    options?.useSessionStorage && (options.useLocalStorage = false);
-
     // merge defaults with user options
-    options = { ...defaultOptions, ...options };
-    this.options = options;
+    const opts = { ...defaultOptions, ...options } as Options;
 
-    this.init(element);
-    this.theme = this.getOsPreference(options);
+    // avoid using both values
+    if (opts.useLocalStorage && opts.useSessionStorage) {
+      opts.useSessionStorage = false;
+    }
+
+    this.options = opts;
+    this.theme = this.getOsPreference(this.options);
+
     this._style = document.createElement('style');
     this._meta = document.createElement('meta');
+
+    this.init(element);
     this.createAttribute();
     this.syncThemeBetweenTabs();
   }
 
-  init(element: string) {
+  private init(element: string) {
     window
       .matchMedia('(prefers-color-scheme: dark)')
       .addEventListener('change', ({ matches: isDark }) => {
         this.theme = isDark ? 'dark' : 'light';
-        this.savePreference();
+        this.createAttribute();
       });
 
-    document.addEventListener('DOMContentLoaded', () => {
+    const attachListener = () => {
       const htmlElement = document.querySelector<HTMLElement>(element);
       htmlElement?.addEventListener('click', () => this.toggleTheme());
-    });
+    };
+
+    // defer execution until the DOM is fully parsed
+    // to ensure the element exists
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', attachListener);
+      return;
+    }
+
+    attachListener();
   }
 
-  // get os color preference
-  getOsPreference(options: Options): string {
+  private getOsPreference(options: Options): string {
     const { autoMatchTheme, useLocalStorage, useSessionStorage } = options;
     const STO =
       (useLocalStorage && window.localStorage.getItem(Darkify.storageKey)) ||
@@ -60,37 +71,33 @@ export class Darkify {
     return STO;
   }
 
-  createAttribute() {
+  private createAttribute() {
     const dataTheme = document.getElementsByTagName('html')[0];
     const { useColorScheme } = this.options;
-    let css = `/**! Darkify / A simple dark mode toggle library **/\n:root:is([data-theme="${this.theme}"]),[data-theme="${this.theme}"]{color-scheme:${this.theme}}`;
 
-    dataTheme.setAttribute('data-theme', this.theme);
+    const css = `/**! Darkify / A simple dark mode toggle library **/\n:root:where([data-theme="${this.theme}"]),[data-theme="${this.theme}"]{color-scheme:${this.theme}}`;
 
-    this.updateTags(css, useColorScheme ?? []);
+    dataTheme.dataset.theme = this.theme;
+
+    this.updateTags(css, useColorScheme);
     this.savePreference();
   }
 
-  updateTags(css: string, useColorScheme: string[]) {
-    const head = document.head || document.getElementsByTagName('head')[0];
+  private updateTags(css: string, useColorScheme: Options['useColorScheme']) {
+    const [lightColor, darkColor] = useColorScheme;
 
-    // update theme-color meta tag
-    this._meta.setAttribute('name', 'theme-color');
-    this._meta.setAttribute(
-      'content',
-      this.theme === 'light' ? useColorScheme[0] : useColorScheme[1]
-    );
-
-    // update style tag
-    this._style.setAttribute('type', 'text/css');
+    this._meta.name = 'theme-color';
+    this._meta.content = this.theme === 'light' ? lightColor : (darkColor ?? lightColor);
     this._style.innerHTML = css;
 
-    head.appendChild(this._meta);
-    head.appendChild(this._style);
+    const head = document.getElementsByTagName('head')[0];
+
+    // avoid tags duplication
+    if (!this._meta.parentNode) head.appendChild(this._meta);
+    if (!this._style.parentNode) head.appendChild(this._style);
   }
 
-  // save to local or session storage
-  savePreference() {
+  private savePreference() {
     const { useLocalStorage } = this.options;
     const STO = useLocalStorage ? window.localStorage : window.sessionStorage;
     const OTS = useLocalStorage ? window.sessionStorage : window.localStorage;
@@ -99,7 +106,7 @@ export class Darkify {
     STO.setItem(Darkify.storageKey, this.theme);
   }
 
-  syncThemeBetweenTabs() {
+  private syncThemeBetweenTabs() {
     window.addEventListener('storage', e => {
       if (e.key === Darkify.storageKey && e.newValue) {
         this.theme = e.newValue;

@@ -27,7 +27,6 @@ export class Darkify {
 
     this.options = opts;
     this.theme = this.getOsPreference(this.options);
-
     this._style = document.createElement('style');
     this._meta = document.createElement('meta');
 
@@ -36,7 +35,7 @@ export class Darkify {
     this.syncThemeBetweenTabs();
   }
 
-  private init(element: string) {
+  private init(element?: string) {
     window
       .matchMedia('(prefers-color-scheme: dark)')
       .addEventListener('change', ({ matches: isDark }) => {
@@ -44,10 +43,12 @@ export class Darkify {
         this.createAttribute();
       });
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const htmlElement = document.querySelector<HTMLElement>(element);
-      htmlElement?.addEventListener('click', () => this.toggleTheme());
-    });
+    if (element) {
+      document.addEventListener('DOMContentLoaded', () => {
+        const htmlElement = document.querySelector<HTMLElement>(element);
+        htmlElement?.addEventListener('click', () => this.toggleTheme());
+      });
+    }
   }
 
   private getOsPreference(options: Options): string {

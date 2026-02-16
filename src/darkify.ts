@@ -44,19 +44,10 @@ export class Darkify {
         this.createAttribute();
       });
 
-    const attachListener = () => {
+    document.addEventListener('DOMContentLoaded', () => {
       const htmlElement = document.querySelector<HTMLElement>(element);
       htmlElement?.addEventListener('click', () => this.toggleTheme());
-    };
-
-    // defer execution until the DOM is fully parsed
-    // to ensure the element exists
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', attachListener);
-      return;
-    }
-
-    attachListener();
+    });
   }
 
   private getOsPreference(options: Options): string {

@@ -21,6 +21,9 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             New Release :tada:
-            - Re-add `*.cjs.js` output file
+            - Code optimization
+            - Set all `Options` properties as optional
+            - Prevent duplication of `<meta>` and `<style>` tags
+            - Exported `Options` types
           draft: false
           prerelease: false

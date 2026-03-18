@@ -1,21 +1,19 @@
 import type { DarkifyPlugin } from '@/types';
 
-export interface KeyboardShortcutOptions {
+interface KeyboardShortcutOptions {
   key?: string;
   ctrl?: boolean;
   shift?: boolean;
   target?: 'body' | 'input' | 'all';
+  cooldown?: number;
 }
 
 export class KeyboardShortcut implements DarkifyPlugin {
+  public static readonly pluginId = 'd-keyboard-shortcut';
   private _host: any;
   private options: Required<KeyboardShortcutOptions>;
+  private _lastTriggered: number = 0;
 
-  /**
-   * Creates a keyboard shortcut listener for theme toggling
-   * @param host - The darkify instance that controls theme state
-   * @param options - Shortcut configuration (key, ctrl, shift, target)
-   */
   constructor(host: any, options?: KeyboardShortcutOptions) {
     this._host = host;
     this.options = {
@@ -23,6 +21,7 @@ export class KeyboardShortcut implements DarkifyPlugin {
       ctrl: options?.ctrl ?? false,
       shift: options?.shift ?? false,
       target: options?.target ?? 'body',
+      cooldown: options?.cooldown ?? 300,
     };
   }
 
@@ -32,13 +31,17 @@ export class KeyboardShortcut implements DarkifyPlugin {
 
     if (this.matches(e)) {
       e.preventDefault();
+
+      const now = Date.now();
+      if (now - this._lastTriggered < this.options.cooldown) return;
+
+      this._lastTriggered = now;
       this._host.toggleTheme();
     }
   };
 
   render(): void {
     document.addEventListener('keydown', this.handleKeyDown);
-    return;
   }
 
   onDestroy(): void {

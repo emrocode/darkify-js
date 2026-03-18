@@ -1,5 +1,5 @@
 #!/bin/bash
-mkdir demo && cat > ./demo/index.html << EOF
+rm -rf demo; mkdir demo && cat > ./demo/index.html << EOF
 <!doctype html>
 <html lang="en">
   <head>
@@ -8,26 +8,18 @@ mkdir demo && cat > ./demo/index.html << EOF
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script type="text/javascript" src="../dist/darkify.umd.js"></script>
     <script type="text/javascript" src="../dist/plugins/index.umd.js"></script>
-    <title>Darkify &#x2014; Demo</title>
+    <title>Demo</title>
   </head>
   <style>
-    .card,main{display:flex}*,::after,::before{margin:0;padding:0;box-sizing:border-box}:root{--pmcolor:#f1f0f9;--sdcolor:#fefefe;--ttcolor:#2e2e2e;--qncolor:#f5f5f5;--border-sm:0.25rem}:root:where([data-theme=dark]){--pmcolor:#2e2e2e;--sdcolor:#3b3b3b;--ttcolor:#e2e2e2;--qncolor:#484848}body,html{font-family:system-ui,sans-serif;font-size:100%;line-height:1.5;color:var(--ttcolor);background-color:var(--pmcolor)}main{width:90%;height:100vh;margin:0 auto;align-items:center;justify-content:center}button{font-family:inherit;font-size:inherit;cursor:pointer;border:none;background-color:transparent}.card,.card-button{border-radius:var(--border-sm)}.card{max-width:250px;flex-direction:column;row-gap:1.25rem;cursor:default;padding:1.25rem;text-align:center;background-color:var(--sdcolor);box-shadow:0 1px 2px 0 rgb(0 0 0 / .05)}.card-button{padding:.75rem;color:var(--ttcolor);background-color:var(--qncolor)}:root:where([data-theme=light]) .card-button::before{content:'\0028🌞\0029';margin-right:.5rem}:root:where([data-theme=dark]) .card-button::before{content:'\0028🌚\0029';margin-right:.5rem}
+    :root{--background-color:#f0f0f0;--foreground-color:#0f0f0f}:root:where([data-theme=dark]){--background-color:#1e1e1e;--foreground-color:#e1e1e1}body,html{font:16px/2 system-ui,sans-serif;background-color:var(--background-color);color:var(--foreground-color)}body{margin:0}main{max-width:24ch;width:90%;height:100vh;margin:0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;text-wrap:pretty}
   </style>
   <body>
-    <div id="root">
-      <main>
-        <div class="card">
-          <div class="card-body">
-            <h2 class="card-title">Darkify JS</h2>
-            <em class="card-text">Create an easy dark mode for your site</em>
-          </div>
-          <button type="button" id="element" class="card-button">Toggle theme</button>
-        </div>
-      </main>
-    </div>
+    <main>
+      <em>Create an <strong>easy dark mode</strong> for your site.</em>
+    </main>
     <script type="text/javascript">
       const { ThemeWidget, KeyboardShortcut } = DarkifyPlugins;
-      var dMode = new Darkify('#element', {
+      var dMode = new Darkify({
         usePlugins: [
           [ThemeWidget, { shortcut: 'd' }],
           [KeyboardShortcut]

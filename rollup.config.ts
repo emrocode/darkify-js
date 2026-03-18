@@ -13,7 +13,7 @@ const BANNER = `/**
 
 const config = [
   {
-    input: './src/index.ts',
+    input: 'src/index.ts',
     output: [
       {
         file: 'dist/darkify.esm.js',
@@ -34,12 +34,39 @@ const config = [
     ],
   },
   {
-    input: './src/index.ts',
+    input: 'src/plugins/index.ts',
+    output: [
+      {
+        file: 'dist/plugins/index.js',
+        format: 'esm',
+      },
+      {
+        file: 'dist/plugins/index.umd.js',
+        name: 'DarkifyPlugins',
+        format: 'umd',
+        plugins: [terser()],
+      },
+    ],
+    plugins: [
+      typescript({ tsconfig: './tsconfig.json' }),
+      cleanup({ comments: 'none', extensions: ['ts'] }),
+    ],
+  },
+  {
+    input: 'src/index.ts',
     output: {
       file: 'dist/darkify.d.ts',
       format: 'esm',
     },
-    plugins: [dts()],
+    plugins: [dts({ tsconfig: './tsconfig.json' })],
+  },
+  {
+    input: 'src/plugins/index.ts',
+    output: {
+      file: 'dist/plugins/index.d.ts',
+      format: 'esm',
+    },
+    plugins: [dts({ tsconfig: './tsconfig.json' })],
   },
 ];
 

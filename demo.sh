@@ -25,7 +25,12 @@ mkdir demo && cat > ./demo/index.html << EOF
       </main>
     </div>
     <script type="text/javascript">
-      var dMode = new Darkify('#element');
+      var dMode = new Darkify('#element', {
+        usePlugins: [
+          [DarkifyPlugins.ThemeWidget, { position: 'top-right', size: 'medium' }],
+          [DarkifyPlugins.KeyboardShortcut, { key: 't' }]
+        ]
+      });
       console.info(dMode);
     </script>
   </body>

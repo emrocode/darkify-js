@@ -8,33 +8,41 @@ export interface KeyboardShortcutOptions {
 }
 
 export class KeyboardShortcut implements DarkifyPlugin {
-  private shadow!: ShadowRoot;
-  private host: any;
+  private _host: any;
   private options: Required<KeyboardShortcutOptions>;
 
+  /**
+   * Creates a keyboard shortcut listener for theme toggling
+   * @param host - The darkify instance that controls theme state
+   * @param options - Shortcut configuration (key, ctrl, shift, target)
+   */
   constructor(host: any, options?: KeyboardShortcutOptions) {
-    this.host = host;
-
+    this._host = host;
     this.options = {
-      key: options?.key ?? 't',
+      key: options?.key ?? 'd',
       ctrl: options?.ctrl ?? false,
       shift: options?.shift ?? false,
       target: options?.target ?? 'body',
     };
   }
 
-  render(): HTMLElement {
-    document.addEventListener('keydown', e => {
-      if (this.options.target === 'body' && this.isTyping(e)) return;
-      if (this.options.target === 'input' && !this.isTyping(e)) return;
+  private handleKeyDown = (e: KeyboardEvent) => {
+    if (this.options.target === 'body' && this.isTyping(e)) return;
+    if (this.options.target === 'input' && !this.isTyping(e)) return;
 
-      if (this.matches(e)) {
-        e.preventDefault();
-        this.host.toggleTheme();
-      }
-    });
+    if (this.matches(e)) {
+      e.preventDefault();
+      this._host.toggleTheme();
+    }
+  };
 
-    return document.createElement('div');
+  render(): void {
+    document.addEventListener('keydown', this.handleKeyDown);
+    return;
+  }
+
+  onDestroy(): void {
+    document.removeEventListener('keydown', this.handleKeyDown);
   }
 
   private matches(e: KeyboardEvent): boolean {

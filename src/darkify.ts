@@ -1,22 +1,27 @@
-import { isBrowser } from '@/isBrowser';
+import { EventListenerManager } from '@/eventListenerManager';
 import { defaultOptions } from '@/defaultOptions';
+import { isBrowser } from '@/isBrowser';
 import type { DarkifyPlugin, Options } from '@/types';
 
 export class Darkify {
   private static readonly storageKey: string = 'theme';
-  readonly options: Options = defaultOptions;
+  public readonly options: Options = defaultOptions;
   private plugins: DarkifyPlugin[] = [];
-  theme: string = 'light';
-  _style!: HTMLStyleElement;
-  _meta!: HTMLMetaElement;
+  public theme: string = 'light';
+  private _elm!: EventListenerManager;
+  private _meta!: HTMLMetaElement;
+  private _style!: HTMLStyleElement;
 
   /**
-   * @param {string} element Button ID ( recommended ) or HTML element
-   * @param {object} options Options
+   * Creates a new Darkify instance for managing dark/light theme
+   * @param element - Button ID (recommended) or HTML element selector
+   * @param options - Configuration options for customizing behavior
    * @see {@link https://github.com/emrocode/darkify-js/wiki|Documentation}
    */
   constructor(element: string, options: Partial<Options>) {
     if (!isBrowser) return;
+
+    this._elm = new EventListenerManager();
 
     // merge defaults with user options
     const opts = { ...defaultOptions, ...options } as Options;
@@ -29,15 +34,43 @@ export class Darkify {
     this.init(element);
     this.createAttribute();
     this.syncThemeBetweenTabs();
+  }
+
+  private init(element?: string): void {
+    this._elm.addListener(
+      window.matchMedia('(prefers-color-scheme: dark)'),
+      'change',
+      ({ matches: isDark }: MediaQueryListEvent) => {
+        this.theme = isDark ? 'dark' : 'light';
+        this.createAttribute();
+      }
+    );
+
     this.initPlugins();
+
+    const hasWidget = this.plugins.some(p => p.el !== undefined);
+
+    if (element && !hasWidget) {
+      this._elm.addListener(document, 'DOMContentLoaded', () => {
+        const htmlElement = document.querySelector<HTMLElement>(element);
+        if (htmlElement) {
+          this._elm.addListener(htmlElement, 'click', () => this.toggleTheme());
+        }
+      });
+    }
   }
 
   private initPlugins(): void {
     this.options.usePlugins?.forEach(p => {
-      const [Plugin, options] = Array.isArray(p) ? p : [p, undefined];
-      const plugin = new Plugin(this, options);
+      const [Plugin, pluginOptions] = Array.isArray(p) ? p : [p, undefined];
+      const plugin = new Plugin(this, pluginOptions);
+
+      const renderedNode = plugin.render();
+      if (renderedNode instanceof HTMLElement || renderedNode instanceof ShadowRoot) {
+        plugin.el = renderedNode;
+      }
+
       this.plugins.push(plugin);
-      plugin.render();
     });
   }
 
@@ -45,24 +78,6 @@ export class Darkify {
     this.plugins.forEach(plugin => {
       plugin.onThemeChange?.(theme);
     });
-  }
-
-  private init(element?: string): void {
-    window
-      .matchMedia('(prefers-color-scheme: dark)')
-      .addEventListener('change', ({ matches: isDark }) => {
-        this.theme = isDark ? 'dark' : 'light';
-        this.createAttribute();
-      });
-
-    const hasWidget = this.options.usePlugins?.length;
-
-    if (element && !hasWidget) {
-      document.addEventListener('DOMContentLoaded', () => {
-        const htmlElement = document.querySelector<HTMLElement>(element);
-        htmlElement?.addEventListener('click', () => this.toggleTheme());
-      });
-    }
   }
 
   private getStorage(): Storage | undefined {
@@ -115,6 +130,7 @@ export class Darkify {
 
   private savePreference(): void {
     const { useStorage } = this.options;
+    if (useStorage === 'none') return;
     const storage = useStorage === 'local';
 
     const STO = storage ? window.localStorage : window.sessionStorage;
@@ -125,10 +141,11 @@ export class Darkify {
   }
 
   private syncThemeBetweenTabs(): void {
-    window.addEventListener('storage', e => {
+    this._elm.addListener(window, 'storage', (e: StorageEvent) => {
       if (e.key === Darkify.storageKey && e.newValue) {
         this.theme = e.newValue;
         this.createAttribute();
+        this.notifyPlugins(e.newValue);
       }
     });
   }
@@ -141,17 +158,45 @@ export class Darkify {
 
   /**
    * Toggles the theme between light and dark modes
-   * @returns {void}
    */
   toggleTheme(): void {
     this.setTheme(this.theme === 'light' ? 'dark' : 'light');
   }
 
   /**
-   * Retrieves the current active theme
-   * @returns {string}
+   * Retrieves the currently active theme
+   * @returns The current theme name ('light' or 'dark')
    */
   getCurrentTheme(): string {
     return this.theme;
+  }
+
+  /**
+   * Destroys the Darkify instance and cleans up all resources
+   *
+   * Removes all event listeners (system theme changes, click handlers, storage events),
+   * destroys all active plugins, removes injected DOM elements (<style> and <meta> tags),
+   * and frees associated resources.
+   * Call this method when the instance is no longer needed to prevent memory leaks.
+   */
+  destroy(): void {
+    this._elm.clearListeners();
+
+    // remove injected DOM elements
+    this._style?.parentNode?.removeChild(this._style);
+    this._meta?.parentNode?.removeChild(this._meta);
+
+    // destroy plugins
+    if (this.plugins.length > 0) {
+      this.plugins.forEach(plugin => {
+        if (plugin.el) {
+          (plugin.el instanceof ShadowRoot ? plugin.el.host : plugin.el).remove();
+        }
+
+        plugin.onDestroy?.();
+      });
+
+      this.plugins = [];
+    }
   }
 }

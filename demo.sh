@@ -26,10 +26,11 @@ mkdir demo && cat > ./demo/index.html << EOF
       </main>
     </div>
     <script type="text/javascript">
+      const { ThemeWidget, KeyboardShortcut } = DarkifyPlugins;
       var dMode = new Darkify('#element', {
         usePlugins: [
-          [DarkifyPlugins.ThemeWidget, { position: 'top-right', size: 'medium' }],
-          [DarkifyPlugins.KeyboardShortcut, { key: 't' }]
+          [ThemeWidget, { shortcut: 'd' }],
+          [KeyboardShortcut]
         ]
       });
       console.info(dMode);

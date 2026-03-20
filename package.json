@@ -26,7 +26,8 @@
     "_bundle": "rollup -c rollup.config.ts --configPlugin typescript",
     "build": "npm run _cls && npm run _bundle",
     "format": "prettier --write src/",
-    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" jest"
+    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" jest",
+    "prepublishOnly": "npm run test && npm run build"
   },
   "repository": {
     "type": "git",

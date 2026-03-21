@@ -6,4 +6,7 @@ export default {
       useESM: true
     }],
   },
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
 };

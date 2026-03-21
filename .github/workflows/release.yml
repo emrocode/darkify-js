@@ -21,9 +21,9 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             New Release :tada:
-            - Code optimization
-            - Set all `Options` properties as optional
-            - Prevent duplication of `<meta>` and `<style>` tags
-            - Exported `Options` types
+            - Unify storage options in `useStorage`
+            - Add plugins support via `usePlugins` option
+            - Add ThemeWidget and KeyboardShortcut plugins
+            - Add new public method `destroy()`
           draft: false
-          prerelease: false
+          prerelease: true

@@ -1,2 +1,2 @@
-export type { Options } from '../types.d.ts';
-export { Darkify as default } from './darkify';
+export type { DarkifyPlugin, Options } from '@/types';
+export { Darkify as default } from '@/darkify';

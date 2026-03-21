@@ -7,6 +7,7 @@ mkdir demo && cat > ./demo/index.html << EOF
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script type="text/javascript" src="../dist/darkify.umd.js"></script>
+    <script type="text/javascript" src="../dist/plugins/index.umd.js"></script>
     <title>Darkify &#x2014; Demo</title>
   </head>
   <style>
@@ -25,7 +26,13 @@ mkdir demo && cat > ./demo/index.html << EOF
       </main>
     </div>
     <script type="text/javascript">
-      var dMode = new Darkify('#element');
+      const { ThemeWidget, KeyboardShortcut } = DarkifyPlugins;
+      var dMode = new Darkify('#element', {
+        usePlugins: [
+          [ThemeWidget, { shortcut: 'd' }],
+          [KeyboardShortcut]
+        ]
+      });
       console.info(dMode);
     </script>
   </body>

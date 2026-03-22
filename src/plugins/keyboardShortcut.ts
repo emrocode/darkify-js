@@ -10,6 +10,7 @@ export interface KeyboardShortcutOptions {
 export class KeyboardShortcut implements DarkifyPlugin {
   private _host: any;
   private options: Required<KeyboardShortcutOptions>;
+  public static readonly pluginId = 'd-keyboard-shortcut';
 
   /**
    * Creates a keyboard shortcut listener for theme toggling

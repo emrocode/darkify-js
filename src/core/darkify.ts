@@ -1,6 +1,6 @@
-import { EventListenerManager } from '@/eventListenerManager';
-import { defaultOptions } from '@/defaultOptions';
-import { isBrowser } from '@/isBrowser';
+import { EventListenerManager } from '@/core/eventListenerManager';
+import { defaultOptions } from '@/core/defaultOptions';
+import { isBrowser } from '@/utils';
 import type { DarkifyPlugin, Options } from '@/types';
 
 export class Darkify {
@@ -13,26 +13,42 @@ export class Darkify {
   private _style!: HTMLStyleElement;
 
   /**
+   * Creates a new Darkify instance with default options
+   * @param element - Button ID (recommended) or HTML element selector
+   */
+  constructor(element: string);
+
+  /**
+   * Creates a new Darkify instance with custom options only
+   * @param options - Options
+   */
+  constructor(options: Partial<Options>);
+
+  /**
    * Creates a new Darkify instance for managing dark/light theme
    * @param element - Button ID (recommended) or HTML element selector
-   * @param options - Configuration options for customizing behavior
+   * @param options - Options
    * @see {@link https://github.com/emrocode/darkify-js/wiki|Documentation}
    */
-  constructor(element: string, options: Partial<Options>) {
+  constructor(element: string, options: Partial<Options>);
+
+  constructor(element?: string | Partial<Options>, options?: Partial<Options>) {
     if (!isBrowser) return;
 
     this._elm = new EventListenerManager();
 
-    // merge defaults with user options
-    const opts = { ...defaultOptions, ...options } as Options;
+    const el = typeof element === 'string' ? element : undefined;
+    const inputOpts =
+      element && typeof element === 'object' ? (element as Partial<Options>) : options;
+    const opts: Options = { ...defaultOptions, ...inputOpts };
 
     this.options = opts;
     this.theme = this.getOsPreference();
     this._style = document.createElement('style');
     this._meta = document.createElement('meta');
 
-    this.init(element);
     this.createAttribute();
+    this.init(el);
     this.syncThemeBetweenTabs();
   }
 
@@ -46,18 +62,22 @@ export class Darkify {
       }
     );
 
-    this.initPlugins();
-
-    const hasWidget = this.plugins.some(p => p.el !== undefined);
-
-    if (element && !hasWidget) {
-      this._elm.addListener(document, 'DOMContentLoaded', () => {
+    const setup = () => {
+      this.initPlugins();
+      const hasWidget = this.plugins.some(p => p.el !== undefined);
+      if (element && !hasWidget) {
         const htmlElement = document.querySelector<HTMLElement>(element);
         if (htmlElement) {
           this._elm.addListener(htmlElement, 'click', () => this.toggleTheme());
         }
-      });
+      }
+    };
+
+    if (document.readyState !== 'loading') {
+      return setup();
     }
+
+    this._elm.addListener(document, 'DOMContentLoaded', setup);
   }
 
   private initPlugins(): void {
@@ -66,7 +86,7 @@ export class Darkify {
       const plugin = new Plugin(this, pluginOptions);
 
       const renderedNode = plugin.render();
-      if (renderedNode instanceof HTMLElement || renderedNode instanceof ShadowRoot) {
+      if (renderedNode) {
         plugin.el = renderedNode;
       }
 
@@ -189,10 +209,6 @@ export class Darkify {
     // destroy plugins
     if (this.plugins.length > 0) {
       this.plugins.forEach(plugin => {
-        if (plugin.el) {
-          (plugin.el instanceof ShadowRoot ? plugin.el.host : plugin.el).remove();
-        }
-
         plugin.onDestroy?.();
       });
 

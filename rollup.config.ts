@@ -1,5 +1,4 @@
 import typescript from '@rollup/plugin-typescript';
-import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import dts from 'rollup-plugin-dts';
 import cleanup from 'rollup-plugin-cleanup';
@@ -30,17 +29,15 @@ const config = [
       },
     ],
     plugins: [
-      resolve(),
       typescript({ tsconfig: './tsconfig.json' }),
       cleanup({ comments: 'none', extensions: ['ts'] }),
     ],
-    preserveEntrySignatures: 'strict',
   },
   {
     input: 'src/plugins/index.ts',
     output: [
       {
-        file: 'dist/plugins/index.esm.js',
+        file: 'dist/plugins/index.js',
         format: 'esm',
       },
       {
@@ -51,7 +48,6 @@ const config = [
       },
     ],
     plugins: [
-      resolve(),
       typescript({ tsconfig: './tsconfig.json' }),
       cleanup({ comments: 'none', extensions: ['ts'] }),
     ],
@@ -66,13 +62,9 @@ const config = [
   },
   {
     input: 'src/plugins/index.ts',
-    external: ['@/types'],
     output: {
       file: 'dist/plugins/index.d.ts',
       format: 'esm',
-      paths: {
-        '@/types': '../darkify',
-      },
     },
     plugins: [dts({ tsconfig: './tsconfig.json' })],
   },

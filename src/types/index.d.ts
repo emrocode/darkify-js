@@ -1,6 +1,4 @@
-import type { LitElement } from 'lit';
-
-export interface DarkifyPlugin<T extends LitElement = LitElement> {
+export interface DarkifyPlugin<T extends HTMLElement = HTMLElement> {
   el?: T;
   render(): void | T;
   onThemeChange?: (theme: string) => void;

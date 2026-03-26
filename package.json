@@ -10,7 +10,7 @@
       "types": "./dist/darkify.d.ts"
     },
     "./plugins": {
-      "import": "./dist/plugins/index.esm.mjs",
+      "import": "./dist/plugins/index.esm.js",
       "require": "./dist/plugins/index.umd.js",
       "types": "./dist/plugins/index.d.ts"
     },
